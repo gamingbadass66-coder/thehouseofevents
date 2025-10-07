@@ -45,7 +45,7 @@ A comprehensive backend API for The House of Events website, built with Node.js,
    DB_PATH=./database/events.db
    JWT_SECRET=your-super-secret-jwt-key-here
    JWT_EXPIRES_IN=7d
-   FRONTEND_URL=http://localhost:5173
+   FRONTEND_URL=https://thehouseofevents.onrender.com
    ```
 
 4. **Initialize the database**:
@@ -63,7 +63,7 @@ A comprehensive backend API for The House of Events website, built with Node.js,
    npm run dev
    ```
 
-The API will be available at `http://localhost:3001`
+The API will be available at `https://thehouseofevents.onrender.com`
 
 ## API Endpoints
 
@@ -194,7 +194,7 @@ npm run seed
 | `DB_PATH` | Database file path | ./database/events.db |
 | `JWT_SECRET` | JWT secret key | Required |
 | `JWT_EXPIRES_IN` | JWT expiration | 7d |
-| `FRONTEND_URL` | Frontend URL for CORS | http://localhost:5173 |
+| `FRONTEND_URL` | Frontend URL for CORS | https://thehouseofevents.onrender.com |
 
 ## Contributing
 
