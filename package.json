@@ -79,5 +79,18 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19"
-  }
+  },
+  "description": "**URL**: https://lovable.dev/projects/00e76ef0-29b5-4fb0-9106-1c6b08108739",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gamingbadass66-coder/thehouseofevents.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gamingbadass66-coder/thehouseofevents/issues"
+  },
+  "homepage": "https://github.com/gamingbadass66-coder/thehouseofevents#readme"
 }
