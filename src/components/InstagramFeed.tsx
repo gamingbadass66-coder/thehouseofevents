@@ -1,6 +1,6 @@
 import gallery1 from '@/assets/image1.jpg';
-import gallery2 from '@/assets/image2.jpg';
-import gallery3 from '@/assets/image3.jpg';
+import gallery2 from '@/assets/image3.jpg';
+import gallery3 from '@/assets/image2.jpg';
 import gallery4 from '@/assets/image4.jpg';
 import { ExternalLink } from 'lucide-react';
 
