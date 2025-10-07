@@ -57,10 +57,10 @@ app.use(helmet());
 // CORS configuration
 app.use(cors({
   origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
-    'http://localhost:8080',
-    'http://localhost:8081',
-    'http://localhost:3000',
+    process.env.FRONTEND_URL || 'https://thehouseofevents.onrender.com',
+    'https://thehouseofevents.onrender.com',
+    'https://thehouseofevents.onrender.com',
+    'https://thehouseofevents.onrender.com',
     'null'
   ],
   credentials: true

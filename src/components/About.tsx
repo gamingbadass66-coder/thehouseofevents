@@ -1,4 +1,4 @@
-import aboutImage from '@/assets/about-creativity.jpg';
+import aboutImage from '@/assets/image.jpg';
 
 const About = () => {
   return (

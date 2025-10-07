@@ -1,7 +1,7 @@
-import gallery1 from '@/assets/gallery-1.jpg';
-import gallery2 from '@/assets/gallery-2.jpg';
-import gallery3 from '@/assets/gallery-3.jpg';
-import gallery4 from '@/assets/gallery-4.jpg';
+import gallery1 from '@/assets/image1.jpg';
+import gallery2 from '@/assets/image2.jpg';
+import gallery3 from '@/assets/image3.jpg';
+import gallery4 from '@/assets/image4.jpg';
 import { ExternalLink } from 'lucide-react';
 
 const InstagramFeed = () => {
@@ -15,7 +15,7 @@ const InstagramFeed = () => {
   ];
 
   const handleInstagramClick = () => {
-    window.open('https://instagram.com/thehouseofevents', '_blank');
+    window.open('https://www.instagram.com/thehouseofeventts', '_blank');
   };
 
   return (

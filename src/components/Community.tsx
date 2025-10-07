@@ -11,7 +11,7 @@ const Community = () => {
   const [showLearnMoreModal, setShowLearnMoreModal] = useState(false);
 
   const handleFollowUs = () => {
-    window.open('https://instagram.com/thehouseofevents', '_blank');
+    window.open('https://www.instagram.com/thehouseofeventts', '_blank');
   };
 
   const communitySteps = [
