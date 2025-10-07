@@ -324,6 +324,7 @@ Submit a partnership proposal.
   "phone": "+91 98765 43210",
   "organization": "Creative Studio Pvt Ltd",
   "partnership_type_id": 1,
+  "partnership_type_name": "Collaborator (Artist/Performer/Educator)"
   "proposal": "We would like to collaborate on art workshops..."
 }
 ```
