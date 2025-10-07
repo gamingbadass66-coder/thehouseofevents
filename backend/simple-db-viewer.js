@@ -125,9 +125,9 @@ try {
   
   // Insert social media links
   const socialLinks = [
-    ['Instagram', 'https://instagram.com/thehouseofevents'],
-    ['Facebook', 'https://facebook.com/thehouseofevents'],
-    ['Twitter', 'https://twitter.com/thehouseofevents']
+    ['Instagram', 'https://www.instagram.com/thehouseofeventts'],
+    ['Facebook', ''],
+    ['Twitter', '']
   ];
   
   for (const [platform, url] of socialLinks) {

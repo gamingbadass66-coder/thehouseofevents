@@ -47,7 +47,7 @@ try {
   console.log('\n📋 Next steps:');
   console.log('1. Edit .env file with your configuration');
   console.log('2. Run "npm run dev" to start the development server');
-  console.log('3. API will be available at http://localhost:3001');
+  console.log('3. API will be available at fetch("https://your-backend-render-url.onrender.com/api/..."');
   console.log('4. Check README.md for API documentation\n');
 
 } catch (error) {

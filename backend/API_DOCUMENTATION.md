@@ -2,7 +2,7 @@
 
 ## Base URL
 ```
-https://thehouseofevents.onrender.com
+fetch("https://your-backend-render-url.onrender.com/api/...")
 ```
 
 ## Authentication
@@ -324,6 +324,7 @@ Submit a partnership proposal.
   "phone": "+91 98765 43210",
   "organization": "Creative Studio Pvt Ltd",
   "partnership_type_id": 1,
+  "partnership_type_name": "Collaborator (Artist/Performer/Educator)"
   "proposal": "We would like to collaborate on art workshops..."
 }
 ```
@@ -342,6 +343,7 @@ Submit a partnership proposal.
     "partnership_type_id": 1,
     "proposal": "We would like to collaborate on art workshops...",
     "status": "pending",
+    "partnership_type_name": "Collaborator (Artist/Performer/Educator)",
     "created_at": "2024-01-01T00:00:00.000Z"
   },
   "message": "Partnership proposal submitted successfully"
@@ -360,6 +362,7 @@ Get all partnership types.
   "data": [
     {
       "id": 1,
+      "name": "Collaborator (Artist/Performer/Educator)",
       "description": "Creative professionals and educators"
     }
   ]
