@@ -150,7 +150,7 @@
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3001';
+        const API_BASE = 'https://thehouseofevents.onrender.com';
         let totalRecords = 0;
         let totalTables = 0;
 
@@ -259,7 +259,7 @@
                     <div class="error">
                         <strong>Failed to connect to API:</strong><br>
                         ${error.message}<br><br>
-                        Make sure your backend server is running on http://localhost:3001
+                        Make sure your backend server is running on https://thehouseofevents.onrender.com
                     </div>
                 `;
                 document.getElementById('api-status').textContent = '❌ Offline';
