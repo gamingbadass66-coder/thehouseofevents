@@ -1,75 +1,172 @@
-import React from "react";
+import { useState, useEffect } from 'react';
+import apiClient from '@/lib/api';
 
-const Event: React.FC = () => {
-  return (
-    <div
-      style={{
-        backgroundColor: "#f7f7f7",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "2rem",
-        textAlign: "center",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "2rem",
-          fontWeight: "bold",
-          marginBottom: "1rem",
-          color: "#222",
-        }}
-      >
-        The Hunt Is On!
-      </h1>
+export interface Event {
+  id: number;
+  title: string;
+  description: string;
+  short_description?: string;
+  event_date: string;
+  start_time: string;
+  end_time: string;
+  venue: string;
+  venue_address?: string;
+  price: number;
+  max_capacity?: number;
+  current_bookings: number;
+  category_id?: number;
+  category_name?: string;
+  image_url?: string;
+  status: string;
+  calculated_status: string;
+  created_at: string;
+  updated_at: string;
+}
 
-      <p style={{ marginBottom: "0.5rem", fontSize: "1.1rem" }}>
-        <strong>Date:</strong> 7th December, 2025
-      </p>
-      <p style={{ marginBottom: "1rem", fontSize: "1.1rem" }}>
-        <strong>Time:</strong> 7 AM – 3 PM
-      </p>
+export interface EventCategory {
+  id: number;
+  name: string;
+  description?: string;
+  created_at: string;
+}
 
-      {/* Add your event image */}
-      <img
-        src="/19a6b53f-6844-48f3-9786-9bbbe72c344a.jpg"
-        alt="Amdavadi Hunt"
-        style={{
-          width: "100%",
-          maxWidth: "500px",
-          borderRadius: "16px",
-          marginBottom: "1.5rem",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        }}
-      />
+export const useEvents = (params?: { status?: string; category?: string; upcoming?: boolean }) => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-      <p style={{ fontSize: "1.1rem", marginBottom: "1.5rem" }}>
-        Registrations are open now! Click below to book your spot.
-      </p>
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiClient.getEvents(params);
+      const fetchEvents = async () => {
+  try {
+    setLoading(true);
+    setError(null);
+    const response = await apiClient.getEvents(params);
 
-      <a
-        href="https://allevents.in/ahmedabad/80002540244918?aff_id=udwkf0&ref=sharer"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          backgroundColor: "#000",
-          color: "#fff",
-          padding: "12px 24px",
-          borderRadius: "8px",
-          textDecoration: "none",
-          fontWeight: "bold",
-          fontSize: "1.1rem",
-          transition: "background-color 0.3s ease",
-        }}
-        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#444")}
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#000")}
-      >
-        Book Now
-      </a>
-    </div>
-  );
+    // TEMPORARY fallback event (so something always appears even if backend fails)
+    const staticEvent = [
+      {
+        id: 1,
+        title: "SIP — Share. Inspire. Paint.",
+        description: "An evening of art, music, and creativity with The House of Events.",
+        short_description: "Paint, connect, and express yourself.",
+        event_date: "2025-12-07",
+        start_time: "18:00",
+        end_time: "22:00",
+        venue: "The House of Events Studio",
+        venue_address: "Ahmedabad, India",
+        price: 499,
+        current_bookings: 0,
+        status: "active",
+        calculated_status: "upcoming",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        image_url: "https://upload.wikimedia.org/wikipedia/commons/a/a3/Abstract_paint_art.jpg",
+        booking_url: "https://allevents.in/ahmedabad/80002540244918?aff_id=udwkf0&ref=sharer"
+      }
+    ];
+
+    // If backend fails or returns empty, show this fallback
+    if (!response.success || !response.data || response.data.length === 0) {
+      console.log("⚠️ Using static fallback event");
+      setEvents(staticEvent);
+      return;
+    }
+
+    if (response.success && response.data) {
+      setEvents(response.data);
+    } else {
+      setError(response.message || 'Failed to fetch events');
+    }
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'An error occurred');
+  } finally {
+    setLoading(false);
+  }
 };
 
-export default Event;
+      if (response.success && response.data) {
+        setEvents(response.data);
+      } else {
+        setError(response.message || 'Failed to fetch events');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, [params?.status, params?.category, params?.upcoming]);
+
+  return { events, loading, error, refetch: fetchEvents };
+};
+
+export const useEvent = (id: string) => {
+  const [event, setEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchEvent = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiClient.getEvent(id);
+      if (response.success && response.data) {
+        setEvent(response.data);
+      } else {
+        setError(response.message || 'Event not found');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchEvent();
+    }
+  }, [id]);
+
+  return { event, loading, error, refetch: fetchEvent };
+};
+
+export const useEventCategories = () => {
+  const [categories, setCategories] = useState<EventCategory[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiClient.getEventCategories();
+      if (response.success && response.data) {
+        setCategories(response.data);
+      } else {
+        setError(response.message || 'Failed to fetch categories');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  return { categories, loading, error, refetch: fetchCategories };
+};
+
+
+
+
