@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Viewer - House of Events</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #764ba2 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .table-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table-header {
+            background: #f8f9fa;
+            padding: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .table-content {
+            max-height: 400px;
+            overflow: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            color: #dc3545;
+            padding: 10px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #155724;
+            padding: 10px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .refresh-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .refresh-btn:hover {
+            background: #0056b3;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗄️ Database Viewer</h1>
+            <p>House of Events Database Content</p>
+        </div>
+        <div class="content">
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-tables">-</div>
+                    <div class="stat-label">Tables</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-records">-</div>
+                    <div class="stat-label">Total Records</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="api-status">-</div>
+                    <div class="stat-label">API Status</div>
+                </div>
+            </div>
+            
+            <div id="tables-container">
+                <div class="loading">Loading database content...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://thehouseofevents.onrender.com';
+        let totalRecords = 0;
+        let totalTables = 0;
+
+        // Function to make API calls
+        async function apiCall(endpoint) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Function to create table HTML
+        function createTableHTML(tableName, data) {
+            if (!data || data.length === 0) {
+                return `
+                    <div class="table-section">
+                        <div class="table-header">
+                            <span>📋 ${tableName}</span>
+                            <span>0 records</span>
+                        </div>
+                        <div class="table-content">
+                            <div class="loading">No data found in this table</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const columns = Object.keys(data[0]);
+            const tableRows = data.map(row => 
+                `<tr>${columns.map(col => `<td>${row[col] || 'NULL'}</td>`).join('')}</tr>`
+            ).join('');
+
+            return `
+                <div class="table-section">
+                    <div class="table-header">
+                        <span>📋 ${tableName}</span>
+                        <span>${data.length} records</span>
+                    </div>
+                    <div class="table-content">
+                        <table>
+                            <thead>
+                                <tr>${columns.map(col => `<th>${col}</th>`).join('')}</tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to load all database content
+        async function loadDatabaseContent() {
+            const container = document.getElementById('tables-container');
+            container.innerHTML = '<div class="loading">Loading database content...</div>';
+
+            try {
+                // Check API health first
+                await apiCall('/health');
+                document.getElementById('api-status').textContent = '✅ Online';
+                
+                // Load all tables data
+                const tables = ['events', 'team_members', 'partners', 'gallery', 'testimonials'];
+                let allTablesHTML = '';
+                totalRecords = 0;
+                totalTables = 0;
+
+                for (const tableName of tables) {
+                    try {
+                        const data = await apiCall(`/api/${tableName}`);
+                        if (data && data.length > 0) {
+                            totalRecords += data.length;
+                            totalTables++;
+                        }
+                        allTablesHTML += createTableHTML(tableName, data);
+                    } catch (error) {
+                        allTablesHTML += `
+                            <div class="table-section">
+                                <div class="table-header">
+                                    <span>📋 ${tableName}</span>
+                                    <span>Error</span>
+                                </div>
+                                <div class="table-content">
+                                    <div class="error">Failed to load ${tableName}: ${error.message}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                container.innerHTML = allTablesHTML;
+                
+                // Update stats
+                document.getElementById('total-tables').textContent = totalTables;
+                document.getElementById('total-records').textContent = totalRecords;
+
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="error">
+                        <strong>Failed to connect to API:</strong><br>
+                        ${error.message}<br><br>
+                        Make sure your backend server is running on https://thehouseofevents.onrender.com
+                    </div>
+                `;
+                document.getElementById('api-status').textContent = '❌ Offline';
+            }
+        }
+
+        // Load content when page loads
+        document.addEventListener('DOMContentLoaded', loadDatabaseContent);
+
+        // Add refresh functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('.header');
+            const refreshBtn = document.createElement('button');
+            refreshBtn.className = 'refresh-btn';
+            refreshBtn.textContent = '🔄 Refresh';
+            refreshBtn.onclick = loadDatabaseContent;
+            header.appendChild(refreshBtn);
+        });
+    </script>
+</body>
+</html>
+
+
